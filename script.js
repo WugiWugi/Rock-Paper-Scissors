@@ -9,54 +9,71 @@ const scissors = document.getElementById('scissors');
 
 
 function computerSelection() {
-    const buttons = ['rock', 'paper', 'scissors']
-    const computerSelections = Math.floor(Math.random() * buttons.length);
-
-
-    if (computerSelections === 1) {
-        console.log(buttons[0])
-    } else if (computerSelections === 2) {
-        console.log(buttons[1])
-    } else {
-        console.log(buttons[2])
-    }
+    const buttons = ['rock', 'paper', 'scissors'];
+    return buttons[Math.floor(Math.random() * buttons.length)];
 }
 
-
-let rockButtonClicked = false;
-let paperButtonClicked = false;
-let scissorsButtonClicked = false;
+let playerChoice = ''
 
 function playerSelection() {
     rock.addEventListener("click", () => {
-        rockButtonClicked = true;
+        playerChoice = 'rock';
+        game()
     })
 
     paper.addEventListener("click", () => {
-        paperButtonClicked = true;
+        playerChoice = 'paper';
+        game()
     })
 
     scissors.addEventListener("click", () => {
-        scissorsButtonClicked = true;
+        playerChoice = 'scissors';
+        game()
     })
 }
 
+let win = 0
+let defeat = 0
 
 function game() {
-    if (rockButtonClicked === true && computerSelection() === 'rock') {
+    if (playerChoice === '') { return };
+
+    const computerChoice = computerSelection();
+
+
+    if (playerChoice === computerSelection()) {
+        result.style.color = 'white'
         result.textContent = 'Ничья';
-    } else if (rockButtonClicked === true && computerSelection() === 'paper') {
+    } else if (
+        (playerChoice === 'rock' && computerSelection() === 'scissors') ||
+        (playerChoice === 'paper' && computerSelection() === 'rock') ||
+        (playerChoice === 'scissors' && computerSelection() === 'paper')
+    ) {
+        result.style.color = 'green'
         result.textContent = 'Победа';
-    } else if (paperButtonClicked === true && computerSelection() === 'rock') {
+        win+=1
+    } else {
+        result.style.color = 'red'
         result.textContent = 'Поражение';
-    } else if (paperButtonClicked === true && computerSelection() === 'rock') {
-        result.textContent = 'Поражение';
-    } else if(paperButtonClicked === true && computerSelection() === 'rock'){
-        result.textContent = 'Поражение';
+        defeat+=1
     }
+    score.textContent  = `${win} : ${defeat}`
+    if (win === 5){
+        result.textContent = 'Вы победили в этой игре!!!';
+        setTimeout(resetGame, 1500);
+    }else if(defeat === 5){ 
+        result.textContent = 'Вы проиграли в этой игре!!!';
+        setTimeout(resetGame, 1500);
+    }
+}
 
-
+function resetGame() {
+    win = 0;
+    defeat = 0;
+    score.textContent = `${win} : ${defeat}`;
+    result.style.color = 'white'
+    result.textContent = 'Начнём заново';
 }
 
 
-
+playerSelection()
